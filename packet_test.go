@@ -94,5 +94,24 @@ func TestPacket(t *testing.T) {
 	require.Equal(t, int64(2), pkt3.Duration())
 	require.Equal(t, int64(3), pkt3.Pts())
 
-	// TODO Test SideData
+	pkt4 := astiav.AllocPacket()
+	require.NotNil(t, pkt4)
+	defer pkt4.Free()
+	b := []byte("test")
+	require.NoError(t, pkt4.FromData(b))
+	require.Equal(t, b, pkt4.Data())
+
+	pkt5 := astiav.AllocPacket()
+	require.NotNil(t, pkt5)
+	defer pkt5.Free()
+	b = []byte{1, 2, 3, 4}
+	require.NoError(t, pkt5.AddSideData(astiav.PacketSideDataTypeAudioServiceType, b))
+	require.Equal(t, b, pkt5.SideData(astiav.PacketSideDataTypeAudioServiceType))
+
+	pkt6 := astiav.AllocPacket()
+	require.NotNil(t, pkt6)
+	defer pkt6.Free()
+	b = []byte{}
+	require.NoError(t, pkt6.FromData(b))
+	require.Equal(t, b, pkt6.Data())
 }
